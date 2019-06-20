@@ -10,4 +10,24 @@ services:
     volumes:
       - /data/springboot-docker-compose-app
     ports:
-      - "9080:8080"
+      - 9080:8080
+
+  db:
+    container_name: ${APP_NAME}-db
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - 9306:3306
+
+  adminer:
+    container_name: ${APP_NAME}-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 9081:8080
