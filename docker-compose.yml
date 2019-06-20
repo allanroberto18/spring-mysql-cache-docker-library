@@ -1,17 +1,6 @@
 version: '3'
 
 services:
-  api:
-    container_name: ${APP_NAME}-api
-    image: springboot-docker-compose-app:1
-    build:
-      context: ./docker/java
-      dockerfile: Dockerfile
-    volumes:
-      - /data/springboot-docker-compose-app
-    ports:
-      - 9080:8080
-
   db:
     container_name: ${APP_NAME}-db
     image: mysql
@@ -23,7 +12,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - 9306:3306
+      - 3306:3306
 
   adminer:
     container_name: ${APP_NAME}-adminer
@@ -31,3 +20,22 @@ services:
     restart: always
     ports:
       - 9081:8080
+
+  api:
+    container_name: ${APP_NAME}-api
+    image: springboot-docker-compose-app:1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_SERVER: ${MYSQL_SERVER}
+      DATABASE_NAME: ${MYSQL_DATABASE}
+      DATABASE_PORT: ${MYSQL_PORT}
+      DATABASE_USER: ${MYSQL_USER}
+      DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - db
+    volumes:
+      - /data/springboot-docker-compose-app
+    ports:
+      - 9080:8080
